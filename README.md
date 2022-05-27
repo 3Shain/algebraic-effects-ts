@@ -7,7 +7,7 @@ This project implements _Algebraic Effects and Handlers_ described in [this pape
 - **Fully typed**: Leverage TypeScript's type system to trace your computational effects.
 - **Multi-shot**: Not implemented by generator but continuations such that an effect can continue multiple times with different payloads.
 - **Simple**: Not a surprise
-  - Bonus: compare the .js file and .d.ts declaration. You'll realize they are in fact isomorhic.
+  - Bonus: compare the .js file and .d.ts declaration. You'll realize they are in fact isomorphic.
 
 
 However this project is __not ready for production__, as there is a limitation of typescript recursive type inference (not safe to be abused), as well as the dev experience with continuation(callbacks) is subjectively poor :/
@@ -29,7 +29,7 @@ There are 6 types of computation and 2 of those are primitive: Others can be tra
 
 And computation from the perspective of regular javascript semantic is in fact a plain object of either `{type: 'ret', value}` or `{type: 'op', effect, payload, continuation }`. (can be created by calling `ret(value)` or `op(effect,payload)`)
 
-> Why not `op(effect,payload, continuation)` ? Well it should be but for convinience a wrapped function is provided (_generic effects_, see the paper for extra explainations)
+> Why not `op(effect,payload, continuation)` ? Well it should be but for convenience a wrapped function is provided (_generic effects_, see the paper for extra explaining)
 
 ## Example
 
@@ -47,7 +47,7 @@ Check out the tests inside `/tests` folder.
 
 ## Effects
 
-Simply literal string is used to represent effect types because it's enough and typescrpt has no first-class suport of nominal typing (could be done via literal string or unique symbol but the latter is not human distinguishable)
+Simply literal string is used to represent effect types because it's enough and typescript has no first-class support of nominal typing (could be done via literal string or unique symbol but the latter is not human distinguishable)
 
 The payload and return type of effects are tightly coupled with effect declaration and you should declare like this
 
@@ -84,17 +84,17 @@ class MyHandler<T,K> {
   // K is for continuation (which is a computation!)
 
   // this is optional, if you don't modify the return value
-  // NB: you should always return a "computation" in js functions instead of arbitary js value.
+  // NB: you should always return a "computation" in js functions instead of arbitrary js value.
   return(value: T) {
     return ret(value); 
   }
 
   // assume myEffect is already declared and 
-  // `MyEffectPayloadType` as well as `MyEffectResumtType` are defined somewhere
-  myEffect(payload: MyEffectPayloadType, k: (r:MyEffectResumtType) => K) {
+  // `MyEffectPayloadType` as well as `MyEffectResumeType` are defined somewhere
+  myEffect(payload: MyEffectPayloadType, k: (r:MyEffectResumeType) => K) {
     // ... effect implementation
     return k(doSomethingWith(payload));
-    // technically speaking this example is identical to just call a function... not a very good demostration
+    // technically speaking this example is identical to just call a function... not a very good demonstration
   }
 }
 ```
@@ -114,13 +114,13 @@ interface MyHandlerHKT extends HKT {
 this is how you apply your handler
 
 ```ts
-withHandler<MyHandlerHKT>(new MyHandler()).handle(/* computation to be handed */);
+withHandler<MyHandlerHKT>(new MyHandler()).handle(/* computation to be handled */);
 // and it returns another computation
 ```
 
 ### Side notes
 
-If you are familiar with `fp-ts` then you may recognize that there are two kinds of HKT Encoding methods be used (one for effect and another for handler). I was trying to unify them but I failed. I think current result is acceptable. The first encoding (fp-ts style) is global, while it's not flexible but it's also reasonable to make effects global unique. The second (idea from [this post](https://dev.to/matechs/encoding-of-hkts-in-typescript-5c3)) for handler one is more verbose but flexible so that define a local handler. And it makes generaic parameter passing easier (you can check the backtrack example inside tests: we have nested handler and the inside one needs an extra generic type parameter from the outside onde). The verbosity is not a big concern as we can always hide them from encapsulation.
+If you are familiar with `fp-ts` then you may recognize that there are two kinds of HKT Encoding methods be used (one for effect and another for handler). I was trying to unify them but I failed. I think current result is acceptable. The first encoding (fp-ts style) is global, while it's not flexible but it's also reasonable to make effects global unique. The second (idea from [this post](https://dev.to/matechs/encoding-of-hkts-in-typescript-5c3)) for handler one is more verbose but flexible so that define a local handler. And it makes generic parameter passing easier (you can check the backtrack example inside tests: we have nested handler and the inside one needs an extra generic type parameter from the outside one). The verbosity is not a big concern as we can always hide them from encapsulation.
 
 ## Type
 
@@ -134,7 +134,7 @@ declare function run<T extends Computation>(
 ```
 to guarantee that all effects except for built-ins are properly handled, otherwise you will get `never` in compile-time and it reflects an error will be thrown in runtime.
 
-Note typescript doesn't support recursive function inference, this is very unconvinient because you need to declare the computation type manually but it's always intended to be inferenced implicitly. 
+Note typescript doesn't support recursive function inference, this is very inconvenient because you need to declare the computation type manually but it's always intended to be inferred implicitly. 
 
 ## References
 
@@ -142,7 +142,7 @@ Note typescript doesn't support recursive function inference, this is very uncon
 
 [idea of HKT Encoding](https://dev.to/matechs/encoding-of-hkts-in-typescript-5c3)
 
-## Roadmap
+## Road map
 
 - [ ] async, concurrency
 - [ ] (PoC) a language for algebraic effects that use typescript as kernel language (simple ast transformation?), or a language extension?
