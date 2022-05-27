@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "target": "ESNext",
+    "allowJs": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "strict": true
+  },
+  "include": [
+    "tests/**/*.ts",
+  ]
+}

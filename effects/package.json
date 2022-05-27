@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "module": "../src/effects.js",
+  "typings": "../src/effects.d.ts",
+  "sideEffects": false
+}
