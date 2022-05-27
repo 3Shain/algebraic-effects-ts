@@ -52,7 +52,7 @@ Simply literal string is used to represent effect types because it's enough and 
 The payload and return type of effects are tightly coupled with effect declaration and you should declare like this
 
 ```ts
-declare module 'algebraic-effects-ts' {
+declare module 'algebraic-effects-ts/effects' {
   interface Effects<T> {
     // what is the T for? in case you want HKT. but you may not need it.
     // you can always pass it by the second generic type parameter of `op` 
