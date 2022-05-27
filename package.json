@@ -6,14 +6,16 @@
   },
   "version": "0.0.1",
   "devDependencies": {
+    "typescript": "~4.7.2",
     "vite": "~2.9.9",
-    "vitest": "~0.12.9",
-    "typescript" : "~4.7.2"
+    "vitest": "~0.12.9"
   },
   "type": "module",
+  "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "files": [
-    "src", "effects"
+    "src",
+    "effects"
   ]
 }
