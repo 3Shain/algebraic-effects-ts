@@ -120,7 +120,7 @@ withHandler<MyHandlerHKT>(new MyHandler()).handle(/* computation to be handled *
 
 ### Side notes
 
-If you are familiar with `fp-ts` then you may recognize that there are two kinds of HKT Encoding methods be used (one for effect and another for handler). I was trying to unify them but I failed. I think current result is acceptable. The first encoding (fp-ts style) is global, while it's not flexible but it's also reasonable to make effects global unique. The second (idea from [this post](https://dev.to/matechs/encoding-of-hkts-in-typescript-5c3)) for handler one is more verbose but flexible so that define a local handler. And it makes generic parameter passing easier (you can check the backtrack example inside tests: we have nested handler and the inside one needs an extra generic type parameter from the outside one). The verbosity is not a big concern as we can always hide them from encapsulation.
+If you are familiar with `fp-ts` then you may recognize that there are two kinds of HKT Encoding methods be used (one for effect and another for handler). I was trying to unify them but I failed. I think current result is acceptable. The first encoding (fp-ts style) is global, while it's not flexible but it's also reasonable to make effects global unique. The second (idea from [this post](https://dev.to/matechs/encoding-of-hkts-in-typescript-5c3)) for handler one is more verbose but flexible so that defining a local handler becomes possible. And it makes generic parameter passing easier (you can check the backtrack example inside tests: we have nested handler and the inside one needs an extra generic type parameter from the outside one). The verbosity is not a big concern as we can always hide them via encapsulation.
 
 ## Type
 
@@ -134,7 +134,7 @@ declare function run<T extends Computation>(
 ```
 to guarantee that all effects except for built-ins are properly handled, otherwise you will get `never` in compile-time and it reflects an error will be thrown in runtime.
 
-Note typescript doesn't support recursive function inference, this is very inconvenient because you need to declare the computation type manually but it's always intended to be inferred implicitly. 
+Note typescript doesn't support recursive function inference, this is very inconvenient because you need to declare the computation type manually but it's always intended to be inferred implicitly (see backtrace example inside the tests). 
 
 ## References
 
