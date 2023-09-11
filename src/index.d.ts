@@ -98,11 +98,13 @@ type ToHandleEffects<T> = T extends Operation<infer E, infer D>
 
 declare function step_iter<T extends Computation>(
   cc: T
-): ToHandleEffects<T> extends "io" | "fail" ? ComputationResult<T> : never;
+): ToHandleEffects<T> extends "io" | "fail"
+  ? ComputationResult<T>
+  : `unhanded effect: ${Exclude<ToHandleEffects<T>, "io" | "fail">}`;
 
 interface HKT {
   readonly computationReturn: unknown;
-  readonly continuation: unknown;
+  readonly continuation: Computation;
 }
 
 declare function genericEffect<E extends EffectTypes, T>(

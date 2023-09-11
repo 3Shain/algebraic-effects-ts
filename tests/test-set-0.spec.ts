@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  Computation,
   HKT,
   op,
   Operation,
@@ -380,6 +381,39 @@ describe("test set 0", () => {
       expect(run(main(false, 10))).toBe(10);
     });
   });
+
+  describe("async", () => {
+    class AsyncEnv<T, K extends Computation> {
+      return(x: T) {
+        return ret(Promise.resolve(x));
+      }
+      await<A>(x: Promise<A>, k: (b: A) => K) {
+        return ret(x.then((value) => run(k(value))));
+      }
+    }
+
+    interface AsyncEnvHKT extends HKT {
+      readonly type: AsyncEnv<this["computationReturn"], this["continuation"]>;
+    }
+
+    it("12. async env", async () => {
+      const g = withHandler<AsyncEnvHKT>(new AsyncEnv()).handle(
+        withHandler<MemPrintHKT>(new MemPrint()).handle(
+          // if you exchange the order of handlers, the type check fail. why?
+          seq(await_(Promise.resolve("Hello")), (v) =>
+            seq(print(v), (_) => ret(v))
+          )
+        )
+      );
+      /* 
+      let v = await(Promise.resolve("Hello"))
+      print(v)
+      return v
+      */
+      const w = await run(g);
+      expect(w).toBe("Hello");
+    });
+  });
 });
 
 /**
@@ -395,6 +429,7 @@ declare module "../src/effects" {
     get: Effect<undefined, T>;
     set: Effect<T, void>;
     decide: Effect<undefined, boolean>;
+    await: Effect<Promise<T>, T>;
   }
 }
 
@@ -432,3 +467,4 @@ const fail = () => op("fail", undefined);
 const decide = () => op("decide", undefined);
 const join = (s: string, s1: string) =>
   s === "" ? s1 : s1 === "" ? s : s + " " + s1;
+const await_ = <T>(promise: Promise<T>) => op<"await", T>("await", promise);

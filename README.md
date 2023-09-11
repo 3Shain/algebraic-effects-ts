@@ -130,9 +130,9 @@ There is a util type `ComputationResult<TComputation>` that gives you the final 
 ```ts
 declare function run<T extends Computation>(
   cc: T
-): ToHandleEffects<T> extends "io" | "fail" ? ComputationResult<T> : never;
+): ToHandleEffects<T> extends "io" | "fail" ? ComputationResult<T> : `unhanded effect: ${Exclude<ToHandleEffects<T>, "io" | "fail">}`;
 ```
-to guarantee that all effects except for built-ins are properly handled, otherwise you will get `never` in compile-time and it reflects an error will be thrown in runtime.
+to guarantee that all effects except for built-ins are properly handled, otherwise you will get literal type `unhanded effect: {effect type}` in compile-time and it reflects an error will be thrown in runtime.
 
 Note typescript doesn't support recursive function inference, this is very inconvenient because you need to declare the computation type manually but it's always intended to be inferred implicitly (see backtrace example inside the tests). 
 
@@ -144,7 +144,8 @@ Note typescript doesn't support recursive function inference, this is very incon
 
 ## Road map
 
-- [ ] async, concurrency
+- [x] async, concurrenc
+  - However I doubt it's leaky for async to be defined as a user handler (see comments in the async test case). It's more plausible to make it a built-in effect like `io`. Need more evidence.
 - [ ] (PoC) a language for algebraic effects that use typescript as kernel language (simple ast transformation?), or a language extension?
 
 ## Author
